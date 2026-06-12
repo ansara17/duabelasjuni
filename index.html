@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anniversary untuk Amel</title>
+  <style>
+    :root { --pink:#ff6fae; --text:#5b2440; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Segoe UI",Arial,sans-serif; background:radial-gradient(circle at top left,#fff 0,transparent 32%),linear-gradient(135deg,#ffe3ef,#fff8fc 48%,#ffeaf3); color:var(--text); min-height:100vh; overflow-x:hidden; }
+    .page { width:min(920px,92%); margin:0 auto; padding:32px 0 120px; }
+    .screen { min-height:100vh; display:none; align-items:center; justify-content:center; text-align:center; animation:fade .7s ease both; }
+    .screen.active { display:flex; }
+    .card { width:min(760px,100%); background:rgba(255,255,255,.72); border:1px solid rgba(255,255,255,.9); border-radius:28px; padding:34px 24px; box-shadow:0 20px 60px rgba(255,111,174,.18); backdrop-filter:blur(12px); }
+    h1 { font-size:clamp(2rem,6vw,4.2rem); line-height:1.05; margin:0 0 12px; }
+    h2 { font-size:clamp(1.6rem,4vw,2.4rem); margin:0 0 16px; }
+    p { font-size:clamp(1rem,2.4vw,1.18rem); line-height:1.75; margin:8px 0; }
+    .subtitle { opacity:.82; margin-bottom:26px; }
+    button { border:0; border-radius:999px; padding:13px 24px; background:linear-gradient(135deg,#ff6fae,#ff9bc7); color:white; font-size:1rem; font-weight:650; cursor:pointer; box-shadow:0 10px 26px rgba(255,111,174,.28); transition:transform .2s ease,box-shadow .2s ease; }
+    button:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(255,111,174,.36); }
+    .audio-panel { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); width:min(520px,92%); padding:10px 14px; background:rgba(255,255,255,.88); border:1px solid rgba(255,255,255,.95); border-radius:18px; box-shadow:0 10px 26px rgba(91,36,64,.14); z-index:20; backdrop-filter:blur(10px); }
+    .audio-panel small { display:block; margin-bottom:6px; opacity:.75; font-weight:600; text-align:center; }
+    audio { width:100%; height:36px; }
+    .letter { min-height:160px; display:flex; align-items:center; justify-content:center; padding:18px; border-radius:22px; background:rgba(255,247,251,.9); margin:20px 0 22px; }
+    .letter p { font-size:clamp(1.08rem,3vw,1.42rem); }
+    .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px; }
+    .gallery img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:22px; box-shadow:0 12px 28px rgba(91,36,64,.12); transition:transform .3s ease; background:#ffe4ef; }
+    .gallery img:hover { transform:scale(1.035); }
+    .quiz-options { display:grid; gap:12px; margin-top:18px; }
+    .final-text { font-size:clamp(1.2rem,3vw,1.55rem); font-weight:600; }
+    .heart { position:fixed; top:110%; color:rgba(255,111,174,.6); animation:floatHeart linear forwards; pointer-events:none; z-index:0; }
+    @keyframes fade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes floatHeart { to { transform:translateY(-120vh) rotate(28deg); opacity:0; } }
+    @media (max-width:650px) { .card{padding:28px 18px;border-radius:24px;} .gallery{grid-template-columns:1fr;} button{padding:12px 18px;} }
+  </style>
+</head>
+<body>
+  <div class="audio-panel">
+    <small>Musik latar — tekan play jika belum otomatis berjalan</small>
+    <audio id="bgMusic" controls loop preload="metadata">
+      <source src="music/lagu.mp3" type="audio/mpeg">
+      Browser Anda tidak mendukung pemutar audio.
+    </audio>
+  </div>
+  <section class="screen active" id="coverScreen"><div class="page"><div class="card"><h1 id="coverTitle"></h1><p class="subtitle" id="coverSubtitle"></p><button id="openBtn">Buka Surat</button></div></div></section>
+  <section class="screen" id="letterScreen"><div class="page"><div class="card"><h2>Surat kecil untukmu</h2><div class="letter"><p id="letterText"></p></div><button id="nextLetterBtn">Lanjut</button></div></div></section>
+  <section class="screen" id="galleryScreen"><div class="page"><div class="card"><h2>Galeri Kenangan Kita</h2><p>Beberapa momen sederhana yang selalu ingin aku simpan.</p><div class="gallery" id="gallery"></div><br><button id="toQuizBtn">Lanjut ke Kuis</button></div></div></section>
+  <section class="screen" id="quizScreen"><div class="page"><div class="card"><h2>Mini Kuis</h2><p id="quizQuestion"></p><div class="quiz-options" id="quizOptions"></div><p id="quizFeedback"></p></div></div></section>
+  <section class="screen" id="finalScreen"><div class="page"><div class="card"><h2 id="finalTitle"></h2><p class="final-text" id="finalMessage"></p></div></div></section>
+  <script>
+    const CONFIG = {
+      judul: "Selamat Anniversary, Amel ❤️",
+      subjudul: "Untuk seseorang yang paling berarti dalam hari-hariku.",
+      pesanSurat: [
+        "Amel, terima kasih sudah hadir dan bertahan sejauh ini bersamaku.",
+        "Bersamamu, banyak hal sederhana terasa lebih hangat dan berarti.",
+        "Aku tahu hubungan tidak selalu sempurna, tetapi aku selalu ingin belajar menjadi lebih baik untuk kita.",
+        "Semoga kita terus saling menjaga, saling memahami, dan tumbuh bersama dengan cara yang paling baik.",
+        "Selamat anniversary, sayang. Aku bersyukur punya kamu."
+      ],
+      foto: ["images/foto1.jpg", "images/foto2.jpg", "images/foto3.jpg"],
+      kuis: {
+        pertanyaan: "Apa hal yang paling aku syukuri dari hubungan ini?",
+        pilihan: ["Bisa jalan-jalan", "Punya kamu", "Bisa makan bareng"],
+        jawabanBenar: 1,
+        pesanBenar: "Benar. Jawabannya selalu kamu.",
+        pesanSalah: "Belum tepat. Coba pilih dengan hati."
+      },
+      penutupJudul: "Untuk Amel",
+      penutupPesan: "Semoga hari ini menjadi pengingat bahwa kamu adalah salah satu bagian paling indah dalam hidupku."
+    };
+    const music = document.getElementById("bgMusic");
+    const screens = { cover:coverScreen, letter:letterScreen, gallery:galleryScreen, quiz:quizScreen, final:finalScreen };
+    let letterIndex = 0;
+    function showScreen(name){ Object.values(screens).forEach(s=>s.classList.remove("active")); screens[name].classList.add("active"); }
+    function tryPlayMusic(){ music.play().catch(()=>{}); }
+    function renderLetter(){ letterText.textContent = CONFIG.pesanSurat[letterIndex]; nextLetterBtn.textContent = letterIndex === CONFIG.pesanSurat.length - 1 ? "Lihat Galeri" : "Lanjut"; }
+    function renderGallery(){ gallery.innerHTML = ""; CONFIG.foto.forEach((src,i)=>{ const img=document.createElement("img"); img.src=src; img.alt=`Foto ${i+1}`; gallery.appendChild(img); }); }
+    function renderQuiz(){ quizQuestion.textContent=CONFIG.kuis.pertanyaan; quizOptions.innerHTML=""; quizFeedback.textContent=""; CONFIG.kuis.pilihan.forEach((text,index)=>{ const btn=document.createElement("button"); btn.textContent=text; btn.onclick=()=>{ if(index===CONFIG.kuis.jawabanBenar){ quizFeedback.textContent=CONFIG.kuis.pesanBenar; setTimeout(()=>showScreen("final"),1200); } else { quizFeedback.textContent=CONFIG.kuis.pesanSalah; } }; quizOptions.appendChild(btn); }); }
+    coverTitle.textContent=CONFIG.judul; coverSubtitle.textContent=CONFIG.subjudul; finalTitle.textContent=CONFIG.penutupJudul; finalMessage.textContent=CONFIG.penutupPesan;
+    openBtn.onclick=()=>{ tryPlayMusic(); renderLetter(); showScreen("letter"); };
+    nextLetterBtn.onclick=()=>{ if(letterIndex < CONFIG.pesanSurat.length - 1){ letterIndex++; renderLetter(); } else { renderGallery(); showScreen("gallery"); } };
+    toQuizBtn.onclick=()=>{ renderQuiz(); showScreen("quiz"); };
+    function createHeart(){ const heart=document.createElement("div"); heart.className="heart"; heart.textContent="♥"; heart.style.left=Math.random()*100+"vw"; heart.style.fontSize=(16+Math.random()*22)+"px"; heart.style.animationDuration=(5+Math.random()*4)+"s"; document.body.appendChild(heart); setTimeout(()=>heart.remove(),9000); }
+    setInterval(createHeart,550);
+  </script>
+</body>
+</html>
