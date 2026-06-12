@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anniversary untuk Amel</title>
+<style>
+:root{
+  --pink:#ff6fae;--pink2:#ff9bc7;--text:#5b2440;--soft:#ffe4ef;--card:rgba(255,255,255,.76);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at top left,#fff 0,transparent 32%),linear-gradient(135deg,#ffe3ef,#fff8fc 48%,#ffeaf3);color:var(--text);min-height:100vh;overflow-x:hidden;transition:.3s}
+body.night{background:radial-gradient(circle at top left,#3b0a22 0,transparent 32%),linear-gradient(135deg,#2b0b20,#120812 55%,#3a1230);color:#ffe8f2}
+.page{width:min(930px,92%);margin:0 auto;padding:32px 0 145px}
+.screen{min-height:100vh;display:none;align-items:center;justify-content:center;text-align:center;animation:fade .6s ease both}
+.screen.active{display:flex}
+.card{width:min(800px,100%);background:var(--card);border:1px solid rgba(255,255,255,.92);border-radius:30px;padding:34px 24px;box-shadow:0 20px 60px rgba(255,111,174,.18);backdrop-filter:blur(12px)}
+body.night .card{background:rgba(45,10,30,.82);border-color:rgba(255,255,255,.18)}
+h1{font-size:clamp(2rem,6vw,4.2rem);line-height:1.05;margin:0 0 12px}
+h2{font-size:clamp(1.55rem,4vw,2.35rem);margin:0 0 16px}
+p{font-size:clamp(1rem,2.4vw,1.16rem);line-height:1.75;margin:8px 0}
+.subtitle{opacity:.82;margin-bottom:26px}
+button{border:0;border-radius:999px;padding:13px 24px;background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;font-size:1rem;font-weight:650;cursor:pointer;box-shadow:0 10px 26px rgba(255,111,174,.28);transition:.2s}
+button:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(255,111,174,.36)}
+button.ghost{background:#fff;color:var(--pink);border:1px solid #ffd0e3;box-shadow:none}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.top-actions{position:fixed;top:14px;right:14px;z-index:120;display:flex;gap:8px}
+.top-actions button{padding:10px 14px;font-size:.88rem}
+.envelope{width:min(310px,82vw);height:205px;margin:18px auto 26px;position:relative;cursor:pointer;filter:drop-shadow(0 18px 28px rgba(91,36,64,.16))}
+.env-back{position:absolute;inset:0;background:#ffd3e4;border-radius:18px}
+.env-flap{position:absolute;left:0;right:0;top:0;height:110px;background:#ff9bc7;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:.65s}
+.env-letter{position:absolute;left:24px;right:24px;bottom:18px;height:135px;background:#fff;border-radius:14px;padding-top:28px;font-weight:700;transition:.65s}
+.envelope.open .env-flap{transform:rotateX(180deg)}
+.envelope.open .env-letter{transform:translateY(-54px)}
+.audio-player{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(430px,92%);padding:12px 14px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.96);border-radius:22px;box-shadow:0 14px 34px rgba(91,36,64,.18);z-index:100;backdrop-filter:blur(12px);display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;color:#5b2440}
+.audio-btn{width:46px;height:46px;padding:0;display:grid;place-items:center;font-size:1.1rem}
+.audio-info{text-align:left;min-width:0}
+.audio-title{font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.audio-status{font-size:.78rem;opacity:.7;margin-top:2px}
+.progress-wrap{grid-column:1/4;height:7px;background:#ffe0ec;border-radius:999px;overflow:hidden;cursor:pointer}
+.progress{width:0%;height:100%;background:linear-gradient(90deg,var(--pink),var(--pink2));border-radius:999px}
+.time{font-size:.75rem;opacity:.68}
+.letter{min-height:170px;display:flex;align-items:center;justify-content:center;padding:18px;border-radius:22px;background:rgba(255,247,251,.9);margin:20px 0 12px}
+body.night .letter,.softbox{background:rgba(255,247,251,.12)}
+.letter p{font-size:clamp(1.08rem,3vw,1.42rem)}
+.progress-text{font-size:.9rem;opacity:.72;margin-bottom:18px}
+.timeline{display:grid;gap:14px;margin:22px 0;text-align:left}
+.timeline-item{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+.dot{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;display:grid;place-items:center;font-weight:800}
+.timeline-card,.reason-card,.thing-card,.ticket,.surprise,.softbox{padding:18px;background:rgba(255,247,251,.92);border:1px solid #ffd7e7;border-radius:22px;box-shadow:0 10px 24px rgba(91,36,64,.08)}
+body.night .timeline-card,body.night .reason-card,body.night .thing-card,body.night .ticket,body.night .surprise{background:rgba(255,247,251,.11);border-color:rgba(255,255,255,.16)}
+.reason-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.reason-card{min-height:112px;display:flex;align-items:center;justify-content:center;font-weight:650;line-height:1.45}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.photo-card{background:rgba(255,247,251,.92);border-radius:22px;padding:10px;box-shadow:0 12px 28px rgba(91,36,64,.12)}
+.photo-card.locked{opacity:.48;filter:grayscale(1)}
+.photo-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:17px;background:#ffe4ef;cursor:pointer}
+.caption{font-size:.92rem;line-height:1.45;margin-top:8px}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.84);justify-content:center;align-items:center;z-index:200;padding:18px}
+.lightbox img{max-width:92%;max-height:86%;border-radius:20px;box-shadow:0 16px 50px rgba(0,0,0,.35)}
+.lightbox span{position:fixed;top:18px;right:24px;color:white;font-size:2rem;cursor:pointer}
+.quiz-progress-bar{height:9px;background:#ffe0ec;border-radius:999px;overflow:hidden;margin:18px 0}
+.quiz-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));border-radius:999px;transition:.35s}
+.quiz-options{display:grid;gap:12px;margin-top:18px}
+.score-box{font-weight:700;margin-top:18px}
+.meter{height:22px;background:#ffe0ec;border-radius:999px;overflow:hidden;margin:24px 0}
+.meter-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));transition:.9s}
+.big-number{font-size:2rem;font-weight:800}
+.thing-card{min-height:120px;display:grid;place-items:center;font-weight:700;font-size:1.12rem}
+.ticket{border:2px dashed var(--pink);margin-top:20px}
+.secret-heart{position:fixed;font-size:22px;z-index:90;cursor:pointer;opacity:.65}
+.final-text{font-size:clamp(1.2rem,3vw,1.55rem);font-weight:600}
+.surprise{margin-top:24px;display:none}
+.heart{position:fixed;top:110%;color:rgba(255,111,174,.6);animation:floatHeart linear forwards;pointer-events:none;z-index:0}
+.confetti{position:fixed;top:-10px;width:8px;height:14px;border-radius:2px;animation:confettiFall 3.8s linear forwards;z-index:300;pointer-events:none}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatHeart{to{transform:translateY(-120vh) rotate(28deg);opacity:0}}
+@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(max-width:650px){.card{padding:28px 18px;border-radius:24px}.gallery,.reason-grid{grid-template-columns:1fr}.timeline-item{grid-template-columns:34px 1fr}button{padding:12px 18px}.audio-player{grid-template-columns:auto 1fr}.time{display:none}.progress-wrap{grid-column:1/3}}
+</style>
+</head>
+<body>
+<audio id="bgMusic" loop preload="metadata"></audio>
+<audio id="clickSound" preload="auto"></audio>
+
+<div class="top-actions">
+  <button class="ghost" id="themeBtn">Mode malam</button>
+</div>
+
+<div class="audio-player">
+  <button class="audio-btn" id="playBtn">▶</button>
+  <div class="audio-info">
+    <div class="audio-title" id="trackTitle">Musik latar</div>
+    <div class="audio-status" id="audioStatus">Tekan play jika belum otomatis berjalan</div>
+  </div>
+  <div class="time" id="timeText">0:00</div>
+  <div class="progress-wrap" id="progressWrap"><div class="progress" id="progressBar"></div></div>
+</div>
+
+<section class="screen active" id="envelopeScreen"><div class="page"><div class="card">
+  <h1 id="coverTitle"></h1>
+  <p class="subtitle" id="coverSubtitle"></p>
+  <div class="envelope" id="envelope">
+    <div class="env-back"></div><div class="env-letter">Untuk Amel ❤️</div><div class="env-flap"></div>
+  </div>
+  <button id="openBtn">Buka Amplop</button>
+</div></div></section>
+
+<section class="screen" id="letterScreen"><div class="page"><div class="card">
+  <h2>Surat kecil untukmu</h2>
+  <div class="letter"><p id="letterText"></p></div>
+  <div class="progress-text" id="letterProgress"></div>
+  <button id="nextLetterBtn">Lanjut</button>
+</div></div></section>
+
+<section class="screen" id="timelineScreen"><div class="page"><div class="card">
+  <h2>Timeline kecil tentang kita</h2>
+  <div class="timeline" id="timeline"></div>
+  <button id="toReasonBtn">Lanjut</button>
+</div></div></section>
+
+<section class="screen" id="reasonScreen"><div class="page"><div class="card">
+  <h2>Beberapa hal yang aku syukuri darimu</h2>
+  <p>Bagian kecil dari banyak alasan kenapa kamu berarti.</p>
+  <div class="reason-grid" id="reasonGrid"></div>
+  <button id="toQuizBtn">Lanjut ke Kuis</button>
+</div></div></section>
+
+<section class="screen" id="quizScreen"><div class="page"><div class="card">
+  <h2>Mini Kuis Kita</h2>
+  <div class="progress-text" id="quizNumber"></div>
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+  <p id="quizQuestion"></p>
+  <div class="quiz-options" id="quizOptions"></div>
+  <p id="quizFeedback"></p>
+  <div class="score-box" id="scoreBox"></div>
+</div></div></section>
+
+<section class="screen" id="galleryScreen"><div class="page"><div class="card">
+  <h2>Memory Unlock Gallery</h2>
+  <p>Foto terbuka sesuai hasil kuis. Klik foto untuk melihat lebih dekat.</p>
+  <div class="gallery" id="gallery"></div>
+  <div class="row"><button id="toGameBtn">Lanjut ke Mini Game</button></div>
+</div></div></section>
+
+<div class="lightbox" id="lightbox"><span id="closeLightbox">×</span><img id="lightboxImg" alt="Foto besar"></div>
+
+<section class="screen" id="gameScreen"><div class="page"><div class="card">
+  <h2>Love Meter</h2>
+  <p>Tingkat sayang Qisti ke Amel sedang dihitung...</p>
+  <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+  <div class="big-number" id="meterText">0%</div>
+  <p id="meterResult"></p>
+  <button id="startMeterBtn">Hitung</button>
+  <button id="toJarBtn" class="ghost">Lanjut</button>
+</div></div></section>
+
+<section class="screen" id="jarScreen"><div class="page"><div class="card">
+  <h2>Jar of Reasons</h2>
+  <p>Ambil satu alasan acak dari toples kecil ini.</p>
+  <div class="softbox" id="jarText">Klik tombol di bawah.</div>
+  <div class="row"><button id="jarBtn">Ambil Alasan Acak ❤️</button><button id="toThingsBtn" class="ghost">Lanjut</button></div>
+</div></div></section>
+
+<section class="screen" id="thingsScreen"><div class="page"><div class="card">
+  <h2>100 Hal Tentang Kamu</h2>
+  <p>Versi ini berisi daftar awal. Nanti bisa Anda tambah sampai 100 di bagian CONFIG.</p>
+  <div class="thing-card" id="thingText">Klik untuk membuka hal pertama.</div>
+  <div class="progress-text" id="thingProgress"></div>
+  <div class="row"><button id="thingBtn">Buka Hal Berikutnya</button><button id="toPlaylistBtn" class="ghost">Lanjut</button></div>
+</div></div></section>
+
+<section class="screen" id="playlistScreen"><div class="page"><div class="card">
+  <h2>Playlist Kenangan</h2>
+  <p>Pilih lagu yang ingin diputar.</p>
+  <div class="quiz-options" id="playlistBox"></div>
+  <button id="toTicketBtn">Lanjut</button>
+</div></div></section>
+
+<section class="screen" id="ticketScreen"><div class="page"><div class="card">
+  <h2>Virtual Date Ticket</h2>
+  <div class="ticket">
+    <h2>🎟 Date Coupon</h2>
+    <p>Berlaku untuk: quality time, makan bareng, cerita panjang, dan satu permintaan khusus dari Amel.</p>
+    <p><strong>Status:</strong> berlaku kapan pun Amel ingin menggunakannya.</p>
+  </div>
+  <button id="toFinalBtn">Lanjut ke Penutup</button>
+</div></div></section>
+
+<section class="screen" id="finalScreen"><div class="page"><div class="card">
+  <h2 id="finalTitle"></h2>
+  <p class="final-text" id="finalMessage"></p>
+  <div class="row">
+    <button id="surpriseBtn">Buka Pesan Rahasia</button>
+    <button id="hugBtn" class="ghost">Peluk Virtual</button>
+    <button id="restartBtn" class="ghost">Ulang dari Awal</button>
+  </div>
+  <div class="surprise" id="surpriseBox"></div>
+</div></div></section>
+
+<script>
+const CONFIG={
+  judul:"Selamat Anniversary, Amel ❤️",
+  subjudul:"Aku buat halaman kecil ini khusus untuk kamu.",
+  soundEffect:"music/click.mp3",
+  playlist:[
+    {judul:"Lagu Anniversary",file:"music/lagu.mp3"},
+    {judul:"Lagu Kenangan 1",file:"music/lagu2.mp3"},
+    {judul:"Lagu Kenangan 2",file:"music/lagu3.mp3"}
+  ],
+  pesanSurat:[
+    "Amel, terima kasih sudah hadir dan bertahan sejauh ini bersamaku.",
+    "Bersamamu, banyak hal sederhana terasa lebih hangat dan berarti.",
+    "Aku tahu hubungan tidak selalu sempurna, tetapi aku selalu ingin belajar menjadi lebih baik untuk kita.",
+    "Semoga kita terus saling menjaga, saling memahami, dan tumbuh bersama dengan cara yang paling baik.",
+    "Selamat anniversary, sayang. Aku bersyukur punya kamu."
+  ],
+  timeline:[
+    {judul:"Awal yang sederhana",isi:"Dari hal kecil, ternyata ada cerita yang tumbuh pelan-pelan."},
+    {judul:"Momen yang aku ingat",isi:"Ada banyak percakapan dan tawa yang diam-diam jadi kenangan."},
+    {judul:"Hari ini",isi:"Hari ketika aku ingin bilang: terima kasih sudah menjadi bagian penting dalam hidupku."}
+  ],
+  alasanSayang:[
+    "Karena kamu punya cara sederhana untuk membuat hariku terasa lebih tenang.",
+    "Karena bersamamu, aku merasa lebih kuat untuk menjadi versi yang lebih baik.",
+    "Karena kamu bukan hanya hadir, tapi juga memberi arti."
+  ],
+  foto:[
+    {src:"images/foto1.jpg",caption:"Momen pertama yang ingin aku simpan."},
+    {src:"images/foto2.jpg",caption:"Salah satu kenangan yang sederhana tapi berarti."},
+    {src:"images/foto3.jpg",caption:"Bagian kecil dari cerita kita."}
+  ],
+  kuis:[
+    {pertanyaan:"Apa hal yang paling aku syukuri dari hubungan ini?",pilihan:["Bisa jalan-jalan","Punya kamu","Bisa makan bareng"],jawabanBenar:1,pesanBenar:"Benar. Jawabannya selalu kamu.",pesanSalah:"Belum tepat. Coba pilih dengan hati."},
+    {pertanyaan:"Kalau aku sedang capek, hal kecil apa yang paling berarti?",pilihan:["Dikasih semangat","Disuruh tidur saja","Ditinggal sendiri"],jawabanBenar:0,pesanBenar:"Iya. Dukungan kecil darimu selalu berarti.",pesanSalah:"Hampir. Tapi yang paling berarti adalah dukunganmu."},
+    {pertanyaan:"Momen sederhana yang sering terasa spesial adalah...",pilihan:["Saat bisa ngobrol denganmu","Saat sinyal hilang","Saat diam-diaman"],jawabanBenar:0,pesanBenar:"Betul. Ngobrol denganmu selalu punya tempat sendiri.",pesanSalah:"Coba lagi. Jawabannya ada di hal paling sederhana."},
+    {pertanyaan:"Satu hal yang ingin aku jaga dalam hubungan ini adalah...",pilihan:["Ego masing-masing","Saling memahami","Menang sendiri"],jawabanBenar:1,pesanBenar:"Benar. Saling memahami adalah rumah untuk kita.",pesanSalah:"Belum tepat. Aku ingin kita saling memahami."},
+    {pertanyaan:"Kalau ada satu doa untuk kita, itu adalah...",pilihan:["Semoga selalu gengsi","Semoga terus saling menjaga","Semoga jarang komunikasi"],jawabanBenar:1,pesanBenar:"Benar. Semoga kita terus saling menjaga.",pesanSalah:"Coba lagi. Doaku selalu yang baik untuk kita."}
+  ],
+  jar:[
+    "Aku suka caramu membuat hal sederhana terasa hangat.",
+    "Aku bersyukur karena kamu tetap ada di banyak keadaan.",
+    "Aku suka ketika kamu bercerita tentang hal-hal kecil.",
+    "Aku suka caramu perhatian, bahkan ketika kamu tidak banyak bicara.",
+    "Aku bersyukur karena kamu adalah kamu."
+  ],
+  things:[
+    "Aku suka caramu tertawa.",
+    "Aku suka caramu bercerita.",
+    "Aku suka ketika kamu perhatian.",
+    "Aku suka karena kamu punya tempat khusus di hatiku.",
+    "Aku suka karena bersamamu, aku merasa pulang.",
+    "Aku suka caramu membuat hari biasa terasa berbeda.",
+    "Aku suka karena kamu berarti, lebih dari yang sering aku ucapkan."
+  ],
+  penutupJudul:"Untuk Amel",
+  penutupPesan:"Terima kasih sudah menjadi bagian yang begitu berarti. Semoga hari ini menjadi pengingat bahwa aku ingin terus belajar mencintaimu dengan lebih baik.",
+  pesanRahasia:"Aku mungkin tidak selalu sempurna dalam menunjukkan rasa sayang, tapi aku sungguh bersyukur punya kamu. Tetap di sini ya, Amel."
+};
+
+const version=Date.now();
+const music=document.getElementById("bgMusic");
+const clickSound=document.getElementById("clickSound");
+let currentTrack=0;
+music.src=CONFIG.playlist[0].file+"?v="+version;
+clickSound.src=CONFIG.soundEffect+"?v="+version;
+const screens={envelope:envelopeScreen,letter:letterScreen,timeline:timelineScreen,reason:reasonScreen,quiz:quizScreen,gallery:galleryScreen,game:gameScreen,jar:jarScreen,things:thingsScreen,playlist:playlistScreen,ticket:ticketScreen,final:finalScreen};
+let letterIndex=0,quizIndex=0,score=0,thingIndex=-1,typingTimer=null,quizLocked=false,unlockedPhotos=1,secretFound=0;
+
+function $(id){return document.getElementById(id)}
+function tap(){clickSound.currentTime=0;clickSound.play().catch(()=>{})}
+document.querySelectorAll("button").forEach(b=>b.addEventListener("click",tap));
+function showScreen(name){Object.values(screens).forEach(s=>s.classList.remove("active"));screens[name].classList.add("active")}
+function confetti(){const colors=["#ff6fae","#ff9bc7","#ffd1e4","#fff","#ffc857"];for(let i=0;i<28;i++){const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"vw";c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.animationDuration=(2.4+Math.random()*1.8)+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),4500)}}
+function formatTime(sec){if(!isFinite(sec))return"0:00";const m=Math.floor(sec/60);const s=String(Math.floor(sec%60)).padStart(2,"0");return m+":"+s}
+function updatePlayer(){playBtn.textContent=music.paused?"▶":"❚❚";audioStatus.textContent=music.paused?"Musik dijeda":"Musik sedang berjalan";progressBar.style.width=(music.duration?(music.currentTime/music.duration)*100:0)+"%";timeText.textContent=formatTime(music.currentTime);trackTitle.textContent=CONFIG.playlist[currentTrack].judul}
+playBtn.onclick=()=>{music.paused?music.play().catch(()=>audioStatus.textContent="Tekan play sekali lagi"):music.pause()};
+music.addEventListener("play",updatePlayer);music.addEventListener("pause",updatePlayer);music.addEventListener("timeupdate",updatePlayer);
+progressWrap.onclick=e=>{if(!music.duration)return;const r=progressWrap.getBoundingClientRect();music.currentTime=((e.clientX-r.left)/r.width)*music.duration};
+themeBtn.onclick=()=>{document.body.classList.toggle("night");themeBtn.textContent=document.body.classList.contains("night")?"Mode terang":"Mode malam"};
+
+function typeWriter(text,el,speed=34){clearTimeout(typingTimer);el.textContent="";let i=0;(function type(){if(i<text.length){el.textContent+=text.charAt(i++);typingTimer=setTimeout(type,speed)}})()}
+function renderLetter(){typeWriter(CONFIG.pesanSurat[letterIndex],letterText);letterProgress.textContent="Pesan "+(letterIndex+1)+" dari "+CONFIG.pesanSurat.length;nextLetterBtn.textContent=letterIndex===CONFIG.pesanSurat.length-1?"Lihat Timeline":"Lanjut"}
+function renderTimeline(){timeline.innerHTML="";CONFIG.timeline.forEach((t,i)=>{timeline.innerHTML+=`<div class="timeline-item"><div class="dot">${i+1}</div><div class="timeline-card"><strong>${t.judul}</strong><p>${t.isi}</p></div></div>`})}
+function renderReasons(){reasonGrid.innerHTML="";CONFIG.alasanSayang.forEach(t=>{const d=document.createElement("div");d.className="reason-card";d.textContent=t;reasonGrid.appendChild(d)})}
+function renderQuiz(){quizLocked=false;const q=CONFIG.kuis[quizIndex];quizNumber.textContent="Soal "+(quizIndex+1)+" dari "+CONFIG.kuis.length;quizProgressFill.style.width=(quizIndex/CONFIG.kuis.length)*100+"%";quizQuestion.textContent=q.pertanyaan;quizOptions.innerHTML="";quizFeedback.textContent="";scoreBox.textContent="Skor sementara: "+score+"/"+CONFIG.kuis.length;q.pilihan.forEach((t,i)=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>answerQuiz(i);quizOptions.appendChild(b)})}
+function answerQuiz(i){if(quizLocked)return;quizLocked=true;const q=CONFIG.kuis[quizIndex];if(i===q.jawabanBenar){score++;unlockedPhotos=Math.min(CONFIG.foto.length,unlockedPhotos+1);quizFeedback.textContent=q.pesanBenar;confetti()}else quizFeedback.textContent=q.pesanSalah;scoreBox.textContent="Skor sementara: "+score+"/"+CONFIG.kuis.length;setTimeout(()=>{quizIndex++;if(quizIndex<CONFIG.kuis.length)renderQuiz();else{quizProgressFill.style.width="100%";renderGallery();showScreen("gallery")}},1300)}
+function renderGallery(){gallery.innerHTML="";CONFIG.foto.forEach((f,i)=>{const card=document.createElement("div");card.className="photo-card"+(i>=unlockedPhotos?" locked":"");if(i<unlockedPhotos){card.innerHTML=`<img src="${f.src}?v=${version}" alt="Foto ${i+1}"><div class="caption">${f.caption}</div>`;card.querySelector("img").onclick=()=>{lightboxImg.src=f.src+"?v="+version;lightbox.style.display="flex"}}else{card.innerHTML=`<div class="softbox">🔒<br>Kenangan terkunci</div><div class="caption">Jawab kuis untuk membuka.</div>`}gallery.appendChild(card)})}
+function runMeter(){let n=0;meterResult.textContent="";meterFill.style.width="0%";meterText.textContent="0%";const timer=setInterval(()=>{n+=Math.floor(8+Math.random()*16);if(n>=100){n=100;clearInterval(timer);setTimeout(()=>{meterText.textContent="Error";meterResult.textContent="Nilainya terlalu besar untuk dihitung.";confetti()},500)}else{meterText.textContent=n+"%";meterFill.style.width=n+"%"}},160)}
+function renderPlaylist(){playlistBox.innerHTML="";CONFIG.playlist.forEach((p,i)=>{const b=document.createElement("button");b.textContent=p.judul;b.onclick=()=>{currentTrack=i;music.src=p.file+"?v="+version;music.play().catch(()=>{});updatePlayer()};playlistBox.appendChild(b)})}
+function createSecretHearts(){[[12,30],[84,40],[50,72]].forEach(pos=>{const h=document.createElement("div");h.className="secret-heart";h.textContent="💗";h.style.left=pos[0]+"vw";h.style.top=pos[1]+"vh";h.onclick=()=>{h.remove();secretFound++;if(secretFound===3){alert("Secret Message Unlocked: Amel, kamu ditemukan di banyak bagian kecil dari hidupku.");confetti()}};document.body.appendChild(h)})}
+
+coverTitle.textContent=CONFIG.judul;coverSubtitle.textContent=CONFIG.subjudul;createSecretHearts();updatePlayer();
+openBtn.onclick=()=>{envelope.classList.add("open");music.play().catch(()=>{});setTimeout(()=>{renderLetter();showScreen("letter")},700)};
+nextLetterBtn.onclick=()=>{if(letterIndex<CONFIG.pesanSurat.length-1){letterIndex++;renderLetter()}else{renderTimeline();showScreen("timeline")}};
+toReasonBtn.onclick=()=>{renderReasons();showScreen("reason")};
+toQuizBtn.onclick=()=>{quizIndex=0;score=0;unlockedPhotos=1;renderQuiz();showScreen("quiz")};
+toGameBtn.onclick=()=>showScreen("game");
+startMeterBtn.onclick=runMeter;
+toJarBtn.onclick=()=>showScreen("jar");
+jarBtn.onclick=()=>{jarText.textContent=CONFIG.jar[Math.floor(Math.random()*CONFIG.jar.length)]};
+toThingsBtn.onclick=()=>showScreen("things");
+thingBtn.onclick=()=>{thingIndex=(thingIndex+1)%CONFIG.things.length;thingText.textContent="#"+(thingIndex+1)+" "+CONFIG.things[thingIndex];thingProgress.textContent=(thingIndex+1)+" dari "+CONFIG.things.length};
+toPlaylistBtn.onclick=()=>{renderPlaylist();showScreen("playlist")};
+toTicketBtn.onclick=()=>showScreen("ticket");
+toFinalBtn.onclick=()=>{finalTitle.textContent=CONFIG.penutupJudul;finalMessage.textContent=CONFIG.penutupPesan;showScreen("final");confetti()};
+surpriseBtn.onclick=()=>{surpriseBox.style.display="block";surpriseBox.textContent=CONFIG.pesanRahasia;confetti()};
+hugBtn.onclick=()=>{surpriseBox.style.display="block";surpriseBox.textContent="Peluk virtual terkirim. Semoga sampai ke hati Amel.";confetti()};
+restartBtn.onclick=()=>location.reload();
+closeLightbox.onclick=()=>lightbox.style.display="none";lightbox.onclick=e=>{if(e.target===lightbox)lightbox.style.display="none"};
+function createHeart(){const h=document.createElement("div");h.className="heart";h.textContent="♥";h.style.left=Math.random()*100+"vw";h.style.fontSize=(16+Math.random()*22)+"px";h.style.animationDuration=(5+Math.random()*4)+"s";document.body.appendChild(h);setTimeout(()=>h.remove(),9000)}
+setInterval(createHeart,550);
+</script>
+</body>
+</html>
